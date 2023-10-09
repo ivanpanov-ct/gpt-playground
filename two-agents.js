@@ -2,6 +2,10 @@
 const {OpenAI} = require('openai')
 const prompt = require('prompt-sync')()
 
+const readFilesFromFolder = require('./read-test-data');
+
+
+
 require('dotenv').config()
 
 const debug = false
@@ -36,16 +40,22 @@ async function sayToUserAgent (message) {
   return messageToAgent(userAgentMessages, message)
 }
 
-const trainingDataMainAgent = ["let's play a game: I'll be giving you a number and you will increment it by 2. Please answer with just the number. We start by command STARTGAME", "STARTGAME"]
-const trainingDataUserAgent = ["let's play a game: I'll be giving you a number and you will decrement it by 1. Please answer with just the number.  We start by command STARTGAME", "STARTGAME"]
+//const trainingDataMainAgent = ["let's play a game: I'll be giving you a number and you will increment it by 2. Please answer with just the number. We start by command STARTGAME", "STARTGAME"]
+//const trainingDataUserAgent = ["let's play a game: I'll be giving you a number and you will decrement it by 1. Please answer with just the number.  We start by command STARTGAME", "STARTGAME"]
+const trainingDataMainAgent = readFilesFromFolder('./training-data/main')
+const trainingDataUserAgent = readFilesFromFolder('./training-data/user')
+console.log("@1")
+console.log(trainingDataMainAgent)
+console.log(trainingDataUserAgent)
+
 
 async function trainMainAgent() {
   console.log('\x1b[31m%s\x1b[0m','training main agent')
   let response
   for (const trainingMessage of trainingDataMainAgent) {
-    console.log('trainer:' + trainingMessage);
+    console.log('\x1b[34m%s\x1b[0m','trainer:' + trainingMessage);
     response = await sayToMainAgent(trainingMessage)
-    console.log("agent:" + response)
+    console.log('\x1b[31m%s\x1b[0m', "main:" + response)
   }
   return response
 
@@ -55,14 +65,14 @@ async function trainUserAgent() {
   console.log('\x1b[32m%s\x1b[0m','training user agent')
   
   for (const trainingMessage of trainingDataUserAgent) {
-    console.log('trainer:' + trainingMessage);
+    console.log('\x1b[34m%s\x1b[0m','user:' + trainingMessage);
     const response = await sayToUserAgent(trainingMessage)
-    console.log("agent:" + response)
+    console.log('\x1b[32m%s\x1b[0m', "agent:" + response)
   } 
 }
 
 async function eventloop(initialMessage) {
-  let fromMainAgent = "3"//initialMessage
+  let fromMainAgent = initialMessage
   console.log('\x1b[1;30m%s\x1b[0m', 'starting the game')
   while(true) {
     console.log('\x1b[31m%s\x1b[0m', "main: " + fromMainAgent)
@@ -75,6 +85,7 @@ async function eventloop(initialMessage) {
 async function main() {
   await trainUserAgent()
   const lastMessageFromMainAgent = await trainMainAgent()
+
 
   if (debug) console.log("history user:")
   if (debug) console.log(JSON.stringify(userAgentMessages))

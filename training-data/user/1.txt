@@ -1,0 +1,160 @@
+I want to play a game with you. I will give you the tutorial to learn about the feature and you will need to answer the questions with the knowledge you learned from the tutorial. 
+Please provide only the answer to the question(API requests) with no additional explanation.
+
+Here is the tutorial:
+
+Product Tailorings
+
+
+
+
+
+Introduction
+With this feature you can present your products in different ways in different markets (stores, brands or regions). Tailoring of product data can be useful for you if:
+you need to present the same product in different ways in different store fronts (regions, etc.);
+you need different Product descriptions in your brand stores for SEO purposes;
+
+Now you can add another name or slug to your products and then assign this new data to a Store. As a result, your customers will see the tailored data in the assigned storefront.  
+Managing Tailorings 
+
+We assume that you have set up your project and created the necessary Stores representing your sales channels. Furthermore, we assume that you have set up a Product.
+Create a new Tailoring
+You can tailor a Product for a particular store. 
+
+All fields are optional: when a value is absent, the corresponding one from the Product is used. 
+In the following example, we are tailoring the fields name and slug in the product level:
+
+ POST /{project-key}/in-store/key=<store-key>/tailoring/products
+{
+  "product": {
+    "typeId": "product",
+    "id": "<product-id>",
+    "key": "<product-key>" //alternative to id
+  },
+  "name" : { "en" : "Torch" },
+  "slug" : { "en" : "torch" },
+  "publish" : false	
+} 
+
+Response:
+{
+  "id" : <tailoring-id>,
+  "store": {
+    "typeId": "store",
+    "key": "<store-key>"
+  },
+  "product": {
+    "typeId": "product",
+    "id": "<product-id>"
+  },
+  "current": {
+  },
+  "staged" : { 
+    "name" : { "en" : "Torch" },
+    "slug" : { "en" : "torch" }
+  },
+  "published" : false,
+  "hasStagedChanges" : true,
+  "createdAt", ...,
+  "lastModifiedAt": ...,
+  "version": ...
+} 
+
+As seen in the example, you can directly specify the parameter publish: true (default is false)when creating a tailoring. See Understanding publish actions of Products and Tailorings
+
+
+Querying existing Tailoring
+You can iterate through existing Tailoring and filter the query results by using the where, sort, limit and offset query parameters, just like on other Query Endpoints - eg. Query Stores.
+GET /{project-key}/products/<product-id>/tailoring
+Response:
+{
+  ...,
+  "results": [
+    {
+      "id" : <tailoring-id>,
+      "store": {
+        "typeId": "store",
+        "key": "<store-key>"
+      },
+     "product": {
+        "typeId": "product",
+        "id": "<product-id>"
+      },
+
+      "current" : ...,
+      "staged" : ...,
+      "published" : true,
+      "hasStagedChanges" : false,
+      ...
+    }
+    ...
+  ]
+}
+
+Understanding publish actions of Products and Tailorings
+Products and Tailoring each have their own published status. The status of the Product Projection is the combination of these two states.
+
+When creating a Tailoring, you can directly specify the parameter publish: true (default is false). In this way, the Tailoring data is published immediately to the current representation.
+
+
+At the moment, you can publish a single Tailoring (i.e. for a Product and a Store)
+
+POST /{project-key}/in-store/<store>/tailoring/products/<product-id>
+{
+  "version" : 1,
+  "actions" : [ { "action" : "publish" } ]
+}
+
+
+Publishing all Tailorings of a Product by publishing the latter will be available soon: 
+
+POST /{project-key}/products/<product-id>
+{
+  "version" : 1,
+  "actions" : [ 
+    { "action" : "publish",
+      "publishTailoring" : true
+     } 
+  ]
+}
+
+To unpublish a single Tailoring (i.e. for a Product and a Store), use the action "unpublish":
+
+POST /{project-key}/in-store/<store>/tailoring/products/<product-id>
+{
+  "version" : 1,
+  "actions" : [ { "action" : "unpublish" } ]
+}
+
+Accessing tailored Product data
+When accessing the Product from the Product Projection, the published Tailoring is applied on top of Product data.
+
+In this example, the Product is published but the Tailoring is not. Accessing the (current by default) Product Projection, will return only the Product data, as the Tailoring is not yet published.
+
+GET /in-store/key=<store-key>/product-projections/<product-id>
+
+Result:
+{
+  "name" : { "en" : "Flashlight" },
+  "description" : { "en" : "It’s very bright!" },
+  "slug" : { "en" : "flashlight" }
+  ...
+}
+
+
+After the Tailoring is published, the Tailoring has effect on the Product Projection, substituting the Product fields with the ones available in the Tailoring :
+
+GET /{project-key}/in-store/key=<store-key>/product-projections/<product-id>
+
+Result:
+{
+  "name" : { "en" : "Torch" },
+  "description" : { "en" : "It’s very bright!" },
+  "slug" : { "en" : "torch" }
+  ... 
+}
+
+Deleting tailored Product data
+To permanently remove a Product tailoring:
+
+DELETE /<project-key>/in-store/key=<store-key>/tailoring/products/<product-id>?version=<num>

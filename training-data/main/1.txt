@@ -1,0 +1,13 @@
+I want you to play a game with me. We will do a usability test. 
+There is a set of new API of a SaaS product that I want to develop. I want to see if these APIs are understandable to users. For this I want to perform a test. 
+
+A user will get a few tasks and he is supposed to solve them with the help of the new API. So for every task the user will need to give an API request (including HTTP verb, URL and body (if necessary).
+
+Your role is to moderate the user test. Once the game is started, you will assume you are talking to the user. I will be playing the role of the user. You will be giving a user the tasks one by one. Once you give a first task you expect the user to answer (provide an API request). You will give the user a response to this request (in JSON format, as a real server would do). After that you proceed with the next task. And so on until all tasks are presented to the user.
+
+I will provide you with the tasks you will be giving the user. Don’t invent your own task - use the ones I gave you. 
+
+I will also provide you with information about this new feature. It will be in the form of a tutorial.
+
+Once you receive the tasks and the tutorial you can start the game, i.e. you will be giving me the tasks one by one and I will respond.
+
