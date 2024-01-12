@@ -1,0 +1,21 @@
+Product tailorings - API Tasks (brands)
+Scenario: 
+Your project context-demo-data-project-22 contains two locales (EN and DE) and two stores: 
+Store name: Numero Uno (store key: numero-uno)
+Store name: Acme (store key: acme)
+Each store is connected to a different storefront: numerouno.com and acme.com 
+The project also has a product sold in both stores: 
+Product name: Numero Uno Striped Men's Polo T-Shirt (EN) Numero Uno gestreiftes Polo T-Shirt für Herren (DE)  (product key: TSNMU1385 id: 292aa58a-5fbd-4b00-bcce-51b710560038)
+
+
+Task 1: 
+The target audience for each store is different, so you would like to use different product names per store to increase sales. Your task is to ensure the product has different product names per store:
+In store Numero Uno (store key: numero-uno), the Product name for that product should be NAVY/OLD GOLD Men's Polo T-Shirt in (EN) locale instead. The head of marketing has approved it so you can make it visible in the store directly during creation.
+In store Acme, the Product name for that product should be the same as default in both locales
+Task 2: 
+Part A: Your company has decided to create a new store brand (Store name: Numero Uno Men, store key: numero-uno-men, already in the project) This new shop would need to display the same product name as store Numero Uno for this product right away in the store. How would you do it?
+Part B: The head of marketing has seen the name in that new store Numero Uno Men but she is not convinced yet about using that one. She wishes to unpublish it for now. What would you do? 
+Task 3:
+How would you fetch the product details for the product in the store Numero Uno (store key: numero-uno) to check that the Tailored product name is displayed? 
+Task 4: 
+Imagine you would like to revert the Product name in the store Numero Uno Men (Store key: numero-uno-men) permanently to use the original name for that product. What would you do?

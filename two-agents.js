@@ -30,6 +30,7 @@ async function messageToAgent(history, message) {
     history.push(response)
     return response.content //TODO elvis
 }
+
 async function sayToMainAgent (message) {
   if (debug) console.log("to main agent: " + message)
   return messageToAgent(mainAgentMessages, message)
@@ -44,7 +45,6 @@ async function sayToUserAgent (message) {
 //const trainingDataUserAgent = ["let's play a game: I'll be giving you a number and you will decrement it by 1. Please answer with just the number.  We start by command STARTGAME", "STARTGAME"]
 const trainingDataMainAgent = readFilesFromFolder('./training-data/main')
 const trainingDataUserAgent = readFilesFromFolder('./training-data/user')
-console.log("@1")
 console.log(trainingDataMainAgent)
 console.log(trainingDataUserAgent)
 

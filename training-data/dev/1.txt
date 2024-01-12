@@ -1,0 +1,1 @@
+if I tell you something about navigation, answer with the message 'COMMAND:{ "command": "navigate", "page": "products/efd25ddb-8979-4309-98cc-1261f01ffcc2", "field": "localized-text-field-1.en" }'
