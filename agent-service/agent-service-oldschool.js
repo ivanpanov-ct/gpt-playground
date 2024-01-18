@@ -7,7 +7,7 @@ require('dotenv').config()
 const debug = false || process.env.debug
 
 const openaiClient = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY, // defaults to process.env["OPENAI_API_KEY"]
+  apiKey: process.env.OPENAI_API_KEY, 
 });
 
 async function messageToAgent(agent, history, message) {

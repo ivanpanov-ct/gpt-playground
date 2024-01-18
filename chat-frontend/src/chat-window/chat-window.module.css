@@ -1,0 +1,30 @@
+.chat-window {
+ background-color: white;
+  position: fixed;  /* or `absolute` depending on the layout */
+  bottom: 20px;     /* distance from the bottom of the viewport */
+  right: 20px;      /* distance from the right side of the viewport */
+  width: 400px;     /* width of the chat window */
+  height: 544px;    /* height of the chat window */
+  z-index: 1000;    /* ensure it's above other elements */
+  border: 1px solid #ccc; /* optional, for styling */
+  font-size: 14px;
+}
+
+.chat-send-button {
+  float: right;
+  margin-right: 14px;
+}
+
+.chat-input {
+  float: left;
+  width: 300px;
+  margin-left: 14px;
+}
+
+.chat-message-user {
+  color: green;
+}
+
+.chat-message-bot {
+  color: blue;
+}

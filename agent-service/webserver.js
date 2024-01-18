@@ -1,6 +1,6 @@
 const express = require('express')
 const cors = require('cors')
-const {tellAgent, initAgent} = require('./agent-service')
+const {initAgent, tellAgent} = require('./agent-service-assistent-api')
 const app = express()
 
 app.use(cors())
