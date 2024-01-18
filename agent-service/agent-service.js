@@ -22,7 +22,7 @@ async function messageToAgent(agent, history, message) {
     const response = chatCompletion.choices[0].message
     history.push(response)
     return {
-        message: response.content, //TODO elvis
+        message: response.content,
         history: history
     } 
 }
@@ -30,7 +30,7 @@ async function messageToAgent(agent, history, message) {
 //const trainingData = ["say hello","let's play if I mention cat you will answer TO_USER_AGENT"]
 const trainingData = readFilesFromFolder('./training-data/dev')
 
-async function initAgentReal() {
+async function initAgent() {
     if (debug) console.log('training main agent')
   let currentHistory = []
   let currentMessageFromAgent
@@ -57,7 +57,7 @@ const contextCheckInit = (agentContextArg) => {
     }
     return agentContext
 }
-const tellAgentReal = async (messageFromUser, agentContextArg) => {
+const tellAgent = async (messageFromUser, agentContextArg) => {
     const agentContext = contextCheckInit(agentContextArg)
   
     const fromAgent = await messageToAgent(openaiClient, agentContext.history, messageFromUser)
@@ -68,26 +68,5 @@ const tellAgentReal = async (messageFromUser, agentContextArg) => {
         }
     }
 }
-
-const initAgentStub = async () => {
-    return {
-        message: 'MC assistant here :) How can I help?',
-        agentContext: {
-            history: [{ test: '1' }]
-        }
-    }
-}
-
-const tellAgentStub = async (message, agentContext) => {
-    if (debug) console.log("tell agent")
-    agentContext.history.push({ test: '2' })
-    return {
-        message: 'COMMAND:{ "command": "navigate", "page": "products/efd25ddb-8979-4309-98cc-1261f01ffcc2", "field": "localized-text-field-1.en" }',
-        agentContext: agentContext
-    }
-}
-
-const tellAgent = tellAgentReal
-const initAgent = initAgentReal
 
 module.exports = {tellAgent, initAgent}
