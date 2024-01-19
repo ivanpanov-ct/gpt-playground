@@ -1,5 +1,5 @@
 
-const {OpenAI} = require('openai')
+const {OpenAI} = require('openai');
 
 require('dotenv').config()
 
@@ -9,7 +9,7 @@ const openai = new OpenAI({
 
 const assistantId = process.env.ASSISTANT_ID
 async function initAgent() {
-    const thread = await openai.beta.threads.create();
+  const thread = await openai.beta.threads.create();
 
   return {
     agentContext: {
@@ -18,12 +18,14 @@ async function initAgent() {
   }
 }
 
+const waitFor = async (interval) => { return new Promise(resolve => setTimeout(resolve, interval))} 
+
 async function waitForCompletion(runArg, agentContext) {
-    let status = "active"
+    let status = "processing"
     const pollingInterval = 200
 
     while (status !== "completed") {
-        await new Promise(resolve => setTimeout(resolve, pollingInterval))
+        await waitFor(pollingInterval)
         const run = await openai.beta.threads.runs.retrieve(
             agentContext.threadId,
             runArg.id
