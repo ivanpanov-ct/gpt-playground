@@ -1,20 +1,11 @@
 import { useState, useEffect } from 'react';
 import styles from './chat-window.module.css';
 
+const SERVER_URL = 'http://localhost:8080'
+
 const parseMessageFromAgent = (message) => {
-  if (message && message.startsWith('COMMAND:')) {
-    try {
-      const commandBody = message.replace(/^COMMAND:/, '');
-      const command = JSON.parse(commandBody);
-      return { from: 'ai', command: command };
-    } catch (e) {
-      console.err(`could not parse the command received from the agent: ${message}`);
-      console.err(e);
-      return { from: 'ai', text: message };
-    }
-  } else {
-    return { from: 'ai', text: message };
-  }
+  //TODO put the logic of agent message processing here
+  return { from: 'ai', text: message };
 };
 
 const ChatWindow = (props) => {
@@ -23,14 +14,18 @@ const ChatWindow = (props) => {
   const [agentContext, setAgentContext] = useState({
     history: [],
   });
+  const [isProcessing, setIsProcessing] = useState(false)
 
   useEffect(() => {
     const asyncInit = async () => {
+      setIsProcessing(true); 
       try {
         const fromAgent = await initializeAgent();
         setMessages([...messages, { from: 'ai', text: fromAgent.message }]);
       } catch (error) {
         console.error(error);
+      } finally {
+        setIsProcessing(false); 
       }
     };
 
@@ -40,12 +35,11 @@ const ChatWindow = (props) => {
 
   async function initializeAgent() {
     try {
-      const response = await fetch('http://localhost:8080/agent/init', {
+      const response = await fetch(`${SERVER_URL}/agent/init`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ message: 'Initialize' }),
+        }
       });
 
       const data = await response.text();
@@ -59,7 +53,7 @@ const ChatWindow = (props) => {
 
   async function tellAgent(message) {
     try {
-      const response = await fetch('http://localhost:8080/agent/tell', {
+      const response = await fetch(`${SERVER_URL}/agent/tell`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -74,6 +68,8 @@ const ChatWindow = (props) => {
       return fromAgent.message;
     } catch (error) {
       console.error('Error:', error);
+    } finally {
+      setIsProcessing(false); 
     }
   }
 
@@ -85,6 +81,8 @@ const ChatWindow = (props) => {
       });
       setInputValue('');
 
+      setIsProcessing(true); 
+
       const responseFromAI = await tellAgent(inputValue, agentContext);
       const parsedMessage = parseMessageFromAgent(responseFromAI);
 
@@ -92,10 +90,6 @@ const ChatWindow = (props) => {
         return [...prevMessages, parsedMessage];
       });
     }
-  };
-
-  const handleInit = async () => {
-    await initializeAgent();
   };
 
   const handleKeyDown = (event) => {
@@ -112,7 +106,7 @@ const ChatWindow = (props) => {
 
   const renderAgentMessage = (message) => {
     if (message.text) {
-      return message.text;
+      return <span><strong>Agent:</strong> {message.text}</span>;
     } else if (message.command) {
       return renderFromCommand(message);
     }
@@ -120,14 +114,15 @@ const ChatWindow = (props) => {
 
   return (
     <div className={styles['chat-window']}>
-      <div style={{ height: '483px', overflowY: 'scroll', border: '1px solid black', padding: '10px', marginBottom: '10px' }}>
+      <div className={styles['chat-messages-container']}>
         {messages.map((message, index) => (
           <div
             className={message.from == 'user' ? styles['chat-message-user'] : styles['chat-message-bot']}
-            key={index}>{message.from == 'user' ? message.text : renderAgentMessage(message)}
+            key={index}>{message.from == 'user' ?  <span><strong>User:</strong> {message.text}</span> : renderAgentMessage(message)}
           </div>
         ))}
       </div>
+      <div className={styles['chat-bottom-panel']}>
       <input
         className={styles['chat-input']}
         type="text"
@@ -137,12 +132,12 @@ const ChatWindow = (props) => {
         style={{ marginRight: '10px' }}
       />
 
-      {/*<button
-        className={styles['chat-send-button']}
-        onClick={handleInit}>Init</button>*/}
       <button
         className={styles['chat-send-button']}
-        onClick={handleSend}>Send</button>
+        disabled={isProcessing}
+        onClick={handleSend}>  {isProcessing ? 'Processing...' : 'Send'}</button>
+      </div>
+      
     </div>
   );
 };

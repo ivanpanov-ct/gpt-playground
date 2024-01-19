@@ -1,1 +1,0 @@
-here is your project key details: Your project context-demo-data-project-22 contains two locales (EN and DE) and two stores: Store name: Numero Uno (store key: numero-uno) Store name: Acme (store key: acme)

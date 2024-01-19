@@ -1,1 +1,0 @@
-when a request is provided with "published": "true" you should populate also the "current" part of the payload response with the same data of "staged".

@@ -1,1 +1,0 @@
-Giving the following tutorial you have to act as the user and be able to do http request
