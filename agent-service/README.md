@@ -1,8 +1,12 @@
 ### Setup 
-- install node.js
-- execute 'npm install'
+- create an OpenAI API key https://platform.openai.com/api-keys 
 - create file '.env'
 - put there OPENAI_API_KEY="${your OpenAI API key}"
 
 ### Start
 - execute 'node webserver.js'
+
+
+### Links
+- About OpenAI Assistants https://platform.openai.com/docs/assistants/how-it-works 
+- Assistant Training UI https://platform.openai.com/assistants 
