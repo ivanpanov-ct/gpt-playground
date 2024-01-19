@@ -1,5 +1,4 @@
 
-
 const {OpenAI} = require('openai')
 
 require('dotenv').config()
@@ -8,21 +7,12 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-const assistantInstructions = "you will convert CSV to JSON. The user will give you CSV as input, and you give the JSON back. Please no further explanaitons and no markdown, only raw JSON (your responses will be parsed by a programm)."
-
+const assistantId = process.env.ASSISTANT_ID
 async function initAgent() {
     const thread = await openai.beta.threads.create();
 
-    const assistant = await openai.beta.assistants.create({
-        name: "My first assistant",
-        instructions: assistantInstructions,
-        tools: [{ type: "code_interpreter" }],
-        model: "gpt-4-1106-preview"
-      });
-
   return {
     agentContext: {
-        assistentId: assistant.id,
         threadId: thread.id
     }
   }
@@ -43,7 +33,7 @@ async function waitForCompletion(runArg, agentContext) {
 }
 
 const tellAgent = async (messageFromUser, agentContext) => {
-    const message = await openai.beta.threads.messages.create(
+    openai.beta.threads.messages.create(
         agentContext.threadId,
         {
           role: "user",
@@ -54,7 +44,7 @@ const tellAgent = async (messageFromUser, agentContext) => {
     const run = await openai.beta.threads.runs.create(
         agentContext.threadId,
         { 
-          assistant_id: agentContext.assistentId
+          assistant_id: assistantId
         }
       )
 
